@@ -1,0 +1,42 @@
+# Danh sach loi chinh ta / go dau tieng Viet thuong gap.
+# Dinh dang moi dong: tu_sai = tu_dung
+# Dong bat dau bang # la chu thich, se bi bo qua.
+# So sanh khong phan biet hoa/thuong.
+# Chi them cac cap thuc su chac chan de tranh bao nham.
+
+# Loi go dau / bo dau sai
+nguời = người
+ngưoi = người
+đuoc = được
+đươc = được
+nhửng = những
+hoăc = hoặc
+giử = giữ
+cũa = của
+
+# Loi chinh ta s/x, ch/tr, d/gi/r pho bien
+sữ dụng = sử dụng
+sử lý = xử lý
+xử dụng = sử dụng
+chia sẽ = chia sẻ
+chia xẻ = chia sẻ
+trao dồi = trau dồi
+xảy da = xảy ra
+suông sẻ = suôn sẻ
+dữ gìn = giữ gìn
+bổ xung = bổ sung
+thăm quan = tham quan
+sáng lạng = sáng lạn
+chuẩn đoán = chẩn đoán
+nhậm chức = nhận chức
+cọ sát = cọ xát
+đường xá = đường sá
+soi mói = xoi mói
+vô hình chung = vô hình trung
+mạnh dạng = mạnh dạn
+năng nỗ = năng nổ
+xuất xắc = xuất sắc
+sâu xắc = sâu sắc
+xúc tích = súc tích
+giành dụm = dành dụm
+tranh dành = tranh giành

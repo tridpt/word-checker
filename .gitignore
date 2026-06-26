@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+
+# Bi mat / cau hinh local (KHONG commit API key)
+.env
+
+# PyInstaller (san pham dong goi, dung lai bang build_exe.bat)
+build/
+dist/
+*.spec
+
+# File ket qua / tam khi chay thu
+*_fixed.docx
+*_commented.docx
+sample.docx
+bao_cao*.html
+ket_qua*.json
