@@ -130,11 +130,13 @@ def check():
     for it in issues:
         by_cat[it.category] = by_cat.get(it.category, 0) + 1
 
+    from checker.report import aggregate_issues
+    display = aggregate_issues(issues)
     return jsonify({
         "filename": f.filename,
         "summary": {"total": len(issues), "errors": errors, "by_category": by_cat},
         "stats": stats,
-        "issues": [_issue_to_dict(it) for it in issues],
+        "issues": [_issue_to_dict(it) for it in display],
     })
 
 

@@ -34,6 +34,41 @@ def summarize(issues: list[Issue]) -> dict:
     return {"total": len(issues), "errors": errors, "by_category": dict(by_cat)}
 
 
+def aggregate_issues(issues: list[Issue], threshold: int = 8) -> list[Issue]:
+    """Gop cac loi lap lai giong nhau (cung mo ta) thanh mot dong tong hop khi
+    so luong vuot nguong, de bao cao gon va de doc. Dung cho phan HIEN THI;
+    danh sach loi goc van duoc giu nguyen cho --json va --annotate.
+    """
+    groups: dict[tuple, list[Issue]] = defaultdict(list)
+    order: list[tuple] = []
+    for it in issues:
+        key = (it.category, it.severity, it.message)
+        if key not in groups:
+            order.append(key)
+        groups[key].append(it)
+
+    result: list[Issue] = []
+    for key in order:
+        members = groups[key]
+        if len(members) <= threshold:
+            result.extend(members)
+            continue
+        nums = [str(m.paragraph) for m in members if m.paragraph is not None][:5]
+        example = ("vi du doan " + ", ".join(nums)) if nums else ""
+        first = members[0]
+        result.append(
+            Issue(
+                category=first.category,
+                severity=first.severity,
+                message=f"{first.message} — {len(members)} doan",
+                paragraph=None,
+                excerpt=example,
+                suggestion=first.suggestion,
+            )
+        )
+    return result
+
+
 def print_report(path: str, issues: list[Issue], stats: dict | None = None) -> None:
     print("=" * 64)
     print(f"  BAO CAO KIEM TRA: {path}")
@@ -54,7 +89,8 @@ def print_report(path: str, issues: list[Issue], stats: dict | None = None) -> N
         print(f"    - {cat}: {cnt}")
     print()
 
-    for it in sorted(issues, key=_sort_key):
+    display = aggregate_issues(issues)
+    for it in sorted(display, key=_sort_key):
         mark = "[X]" if it.severity == SEVERITY_ERROR else "[!]"
         print(f"  {mark} [{it.category}] {it.location()}: {it.message}")
         if it.excerpt:
@@ -67,7 +103,7 @@ def print_report(path: str, issues: list[Issue], stats: dict | None = None) -> N
 def write_html(path: str, src_path: str, issues: list[Issue]) -> None:
     s = summarize(issues)
     rows = []
-    for it in sorted(issues, key=_sort_key):
+    for it in sorted(aggregate_issues(issues), key=_sort_key):
         sev_cls = "err" if it.severity == SEVERITY_ERROR else "warn"
         rows.append(
             f"<tr class='{sev_cls}'>"
@@ -127,7 +163,7 @@ def write_html(path: str, src_path: str, issues: list[Issue]) -> None:
 
 def _issue_rows(issues: list[Issue]) -> str:
     rows = []
-    for it in sorted(issues, key=_sort_key):
+    for it in sorted(aggregate_issues(issues), key=_sort_key):
         sev_cls = "err" if it.severity == SEVERITY_ERROR else "warn"
         rows.append(
             f"<tr class='{sev_cls}'>"

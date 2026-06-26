@@ -6,7 +6,7 @@ from fpdf import FPDF
 from fpdf.enums import XPos, YPos
 
 from .issues import SEVERITY_ERROR, Issue
-from .report import summarize, _sort_key
+from .report import summarize, _sort_key, aggregate_issues
 
 _BLUE = (43, 108, 176)
 _GREY = (90, 100, 110)
@@ -87,7 +87,7 @@ def write_pdf(out_path: str, src_path: str, issues: list[Issue], stats: dict | N
         header = table.row()
         for h in ("Muc do", "Vi tri", "Mo ta", "Goi y"):
             header.cell(h)
-        for it in sorted(issues, key=_sort_key):
+        for it in sorted(aggregate_issues(issues), key=_sort_key):
             row = table.row()
             row.cell("Loi" if it.severity == SEVERITY_ERROR else "Canh bao")
             row.cell(it.location())

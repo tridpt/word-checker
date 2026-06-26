@@ -51,6 +51,10 @@ def _check_size(p: ParagraphInfo, allowed: list[int]) -> list[Issue]:
 def _check_alignment(p: ParagraphInfo, required: str | None) -> list[Issue]:
     if required is None or p.alignment is None:
         return []
+    # Bo qua doan ngan (tieu de, chu thich hinh/bang, trang bia, dong ky ten...):
+    # cac doan nay thuong canh giua/phai mot cach co chu y, khong phai loi.
+    if len(p.text.split()) < 12:
+        return []
     if p.alignment != required:
         name_map = {"justify": "canh deu", "left": "canh trai", "center": "canh giua", "right": "canh phai"}
         return [
