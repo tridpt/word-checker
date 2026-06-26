@@ -17,10 +17,12 @@ import sys
 import config
 from checker.annotate import annotate
 from checker.autofix import autofix
+from checker.document import load_document
 from checker.issues import SEVERITY_ERROR
 from checker.learn_profile import describe_profile, learn_profile
 from checker.report import print_report, write_html, write_html_multi
 from checker.runner import run_checks
+from checker.stats import compute_stats
 
 
 def _gather_docx(path: str) -> list[str]:
@@ -106,9 +108,11 @@ def run(args) -> int:
         valid = [out]
 
     results = []
+    stats_by_file = {}
     for f in valid:
         try:
             issues = _check_one(f, profile, args)
+            stats_by_file[f] = compute_stats(load_document(f))
         except Exception as e:
             print(f"Loi khi doc '{f}': {e}", file=sys.stderr)
             continue
@@ -116,10 +120,10 @@ def run(args) -> int:
 
     # In ket qua
     if len(results) == 1:
-        print_report(results[0][0], results[0][1])
+        print_report(results[0][0], results[0][1], stats_by_file.get(results[0][0]))
     else:
         for f, issues in results:
-            print_report(f, issues)
+            print_report(f, issues, stats_by_file.get(f))
         total = sum(len(iss) for _, iss in results)
         print("=" * 64)
         print(f"  TONG KET: {len(results)} file, {total} van de.")

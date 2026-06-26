@@ -33,10 +33,15 @@ def summarize(issues: list[Issue]) -> dict:
     return {"total": len(issues), "errors": errors, "by_category": dict(by_cat)}
 
 
-def print_report(path: str, issues: list[Issue]) -> None:
+def print_report(path: str, issues: list[Issue], stats: dict | None = None) -> None:
     print("=" * 64)
     print(f"  BAO CAO KIEM TRA: {path}")
     print("=" * 64)
+
+    if stats:
+        print(f"\n  Thong ke: {stats['words']} tu, {stats['paragraphs']} doan, "
+              f"{stats['headings']} tieu de, ~{stats['estimated_pages']} trang, "
+              f"~{stats['reading_minutes']} phut doc")
 
     if not issues:
         print("\n  Khong phat hien loi nao. File san sang de nop!\n")

@@ -194,6 +194,44 @@ def _check_sentence_capitalization(p: ParagraphInfo) -> list[Issue]:
     return issues
 
 
+def _check_double_hyphen(p: ParagraphInfo) -> list[Issue]:
+    issues = []
+    for m in re.finditer(r"--+", p.text):
+        issues.append(
+            Issue(
+                category=CATEGORY_TEXT,
+                severity=SEVERITY_WARNING,
+                message="Dung hai gach noi '--' (nen dung gach ngang '–' hoac '—')",
+                paragraph=p.number,
+                excerpt=_excerpt_around(p.text, m.start()),
+                suggestion="Thay '--' bang gach ngang –",
+            )
+        )
+    return issues
+
+
+def _check_mixed_quotes(doc: DocInfo) -> list[Issue]:
+    """Loi cap tai lieu: dung lan lon nhay thang (\") va nhay cong (“ ”)."""
+    has_straight = False
+    has_curly = False
+    for p in doc.paragraphs:
+        if '"' in p.text:
+            has_straight = True
+        if "\u201c" in p.text or "\u201d" in p.text:
+            has_curly = True
+    if has_straight and has_curly:
+        return [
+            Issue(
+                category=CATEGORY_TEXT,
+                severity=SEVERITY_WARNING,
+                message="Tai lieu dung lan lon dau nhay thang (\") va nhay cong (“ ”)",
+                paragraph=None,
+                suggestion="Thong nhat mot kieu dau nhay trong toan tai lieu",
+            )
+        ]
+    return []
+
+
 def check_text(doc: DocInfo, checks: dict, max_consecutive_empty: int) -> list[Issue]:
     issues: list[Issue] = []
     for p in doc.paragraphs:
@@ -213,6 +251,11 @@ def check_text(doc: DocInfo, checks: dict, max_consecutive_empty: int) -> list[I
             issues += _check_repeated_words(p)
         if checks.get("sentence_capitalization"):
             issues += _check_sentence_capitalization(p)
+        if checks.get("double_hyphen"):
+            issues += _check_double_hyphen(p)
+
+    if checks.get("mixed_quotes"):
+        issues += _check_mixed_quotes(doc)
 
     if checks.get("empty_paragraphs"):
         issues += _check_empty_paragraphs(doc, max_consecutive_empty)

@@ -16,10 +16,12 @@ from flask import Flask, jsonify, render_template, request, send_file
 import config
 from checker.annotate import annotate
 from checker.autofix import autofix
+from checker.document import load_document
 from checker.issues import SEVERITY_ERROR
 from checker.learn_profile import learn_profile
 from checker.resources import resource_path
 from checker.runner import run_checks
+from checker.stats import compute_stats
 
 app = Flask(
     __name__,
@@ -106,6 +108,7 @@ def check():
     try:
         issues = run_checks(tmp_path, profile, do_format, do_text, do_spelling, do_llm,
                             do_headings=request.form.get("headings", "1") == "1")
+        stats = compute_stats(load_document(tmp_path))
     except Exception as e:
         return jsonify({"error": f"Khong doc duoc file: {e}"}), 400
     finally:
@@ -122,6 +125,7 @@ def check():
     return jsonify({
         "filename": f.filename,
         "summary": {"total": len(issues), "errors": errors, "by_category": by_cat},
+        "stats": stats,
         "issues": [_issue_to_dict(it) for it in issues],
     })
 

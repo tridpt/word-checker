@@ -107,6 +107,8 @@ TEXT_CHECKS = {
     "space_in_parens": True,     # khoang trang ben trong ( )
     "repeated_words": True,      # lap tu lien tiep (vd: "cac cac")
     "sentence_capitalization": True,  # viet hoa dau cau sau . ! ?
+    "double_hyphen": True,       # dung '--' thay vi gach ngang
+    "mixed_quotes": True,        # lan lon nhay thang va nhay cong
 }
 
 # So doan trong lien tiep toi da cho phep truoc khi bao loi.

@@ -52,3 +52,18 @@ def test_sentence_cap_ignores_abbrev_number(make_doc):
     path = make_doc(["Muc 1. noi dung muc mot."])
     # sau so thu tu "1." khong nen bao thieu viet hoa
     assert not any("viet hoa" in m for m in _messages(path))
+
+
+def test_double_hyphen(make_doc):
+    path = make_doc(["Cum tu -- gach doi can sua."])
+    assert any("hai gach noi" in m for m in _messages(path))
+
+
+def test_mixed_quotes(make_doc):
+    path = make_doc(['Cau co nhay thang "abc" va nhay cong \u201cxyz\u201d.'])
+    assert any("lan lon" in m for m in _messages(path))
+
+
+def test_no_mixed_quotes_when_consistent(make_doc):
+    path = make_doc(['Cau chi dung nhay thang "abc" thoi.'])
+    assert not any("lan lon" in m for m in _messages(path))

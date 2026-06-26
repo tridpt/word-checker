@@ -4,7 +4,8 @@
 
 Tool dòng lệnh (chạy offline) giúp rà soát file `.docx` trước khi nộp: kiểm tra
 định dạng (font, cỡ chữ, giãn dòng, canh lề, lề trang), lỗi cơ học văn bản (cách
-đôi, dấu cách thừa/thiếu...) và lỗi chính tả tiếng Việt thường gặp.
+đôi, dấu cách thừa/thiếu...) và lỗi chính tả tiếng Việt thường gặp. Ngoài ra còn
+hiện thống kê nhanh (số từ, số đoạn, số trang ước tính, thời gian đọc).
 
 ## Cài đặt
 
@@ -81,6 +82,8 @@ python cli.py sample.docx --html bao_cao.html
 - Nhiều đoạn trống liên tiếp
 - Lặp từ liền nhau (chỉ với hư từ như "các các", "và và" — tránh báo nhầm từ láy)
 - Thiếu viết hoa đầu câu (có chặn viết tắt và số thứ tự)
+- Dùng hai gạch nối `--` thay vì gạch ngang `–`
+- Lẫn lộn dấu nháy thẳng `"` và nháy cong `" "` trong tài liệu
 
 **Tiêu đề mục & đánh số** (`checker/headings.py`)
 - Nhảy cấp tiêu đề (ví dụ Heading 1 nhảy thẳng sang Heading 3)
@@ -224,6 +227,7 @@ word-checker/
    ├─ formatting.py            # kiểm tra định dạng
    ├─ textcheck.py             # kiểm tra lỗi cơ học văn bản
    ├─ headings.py              # kiểm tra tiêu đề mục & đánh số
+   ├─ stats.py                 # thống kê tài liệu (số từ, số trang, thời gian đọc)
    ├─ spelling.py              # kiểm tra chính tả (từ điển, offline)
    ├─ llm_spelling.py          # kiểm tra chính tả bằng AI/LLM (tùy chọn)
    ├─ autofix.py               # tự động sửa lỗi, lưu file mới
@@ -237,5 +241,5 @@ word-checker/
 
 ## Hướng mở rộng
 
-- Kiểm tra thêm: dấu nháy/gạch lẫn lộn, thống kê tài liệu trên web.
 - Tạo icon riêng cho bản .exe.
+- Thêm LICENSE và ảnh chụp giao diện vào README.
