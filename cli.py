@@ -52,6 +52,7 @@ def _check_one(path: str, profile: dict, args) -> list:
         do_llm_spelling=args.llm_spelling,
         do_headings=not args.no_headings,
         limits=_limits_from_args(args),
+        skip_math=not args.no_skip_math,
     )
 
 
@@ -219,6 +220,7 @@ def main():
     parser.add_argument("--no-format", action="store_true", help="Bo qua kiem tra dinh dang")
     parser.add_argument("--no-text", action="store_true", help="Bo qua kiem tra loi co hoc van ban")
     parser.add_argument("--no-headings", action="store_true", help="Bo qua kiem tra tieu de muc & danh so")
+    parser.add_argument("--no-skip-math", action="store_true", help="Khong bo qua doan cong thuc (kiem tra ca vung toan hoc)")
     parser.add_argument("--no-spelling", action="store_true", help="Bo qua kiem tra chinh ta")
     parser.add_argument("--llm-spelling", action="store_true", help="Bat kiem tra chinh ta bang AI/LLM (can cau hinh LLM_API_KEY)")
     args = parser.parse_args()

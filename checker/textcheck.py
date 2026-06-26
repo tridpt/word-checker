@@ -4,6 +4,7 @@ import re
 
 from .document import DocInfo, ParagraphInfo
 from .issues import CATEGORY_TEXT, SEVERITY_ERROR, SEVERITY_WARNING, Issue
+from .mathdetect import is_math_heavy
 
 # Dau cau ket thuc / phan cach
 _PUNCT_AFTER = ",;:"          # bat buoc co dau cach phia sau
@@ -118,8 +119,9 @@ def _check_empty_paragraphs(doc: DocInfo, max_consecutive: int) -> list[Issue]:
                     Issue(
                         category=CATEGORY_TEXT,
                         severity=SEVERITY_WARNING,
-                        message=f"Co {run_len} doan trong lien tiep (toi da nen la {max_consecutive})",
+                        message=f"Co nhieu doan trong lien tiep (toi da nen la {max_consecutive})",
                         paragraph=p.number,
+                        excerpt=f"{run_len} doan trong lien tiep",
                         suggestion="Xoa bot cac doan trong thua",
                     )
                 )
@@ -258,10 +260,13 @@ def _check_placeholder(p: ParagraphInfo) -> list[Issue]:
     return issues
 
 
-def check_text(doc: DocInfo, checks: dict, max_consecutive_empty: int) -> list[Issue]:
+def check_text(doc: DocInfo, checks: dict, max_consecutive_empty: int, skip_math: bool = True) -> list[Issue]:
     issues: list[Issue] = []
     for p in doc.paragraphs:
         if not p.text.strip():
+            continue
+        # Bo qua cac doan cong thuc cho kiem tra dau cau (de bao nham)
+        if skip_math and is_math_heavy(p.text):
             continue
         if checks.get("double_space"):
             issues += _check_double_space(p)

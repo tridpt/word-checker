@@ -4,6 +4,7 @@ from collections import Counter
 
 from .document import DocInfo, ParagraphInfo
 from .issues import CATEGORY_FORMAT, SEVERITY_ERROR, SEVERITY_WARNING, Issue
+from .mathdetect import is_math_heavy
 
 
 def _excerpt(text: str, n: int = 60) -> str:
@@ -134,12 +135,15 @@ def _check_indent_spacing(p: ParagraphInfo, profile: dict) -> list[Issue]:
     return issues
 
 
-def check_formatting(doc: DocInfo, profile: dict) -> list[Issue]:
+def check_formatting(doc: DocInfo, profile: dict, skip_math: bool = True) -> list[Issue]:
     issues: list[Issue] = []
 
     body = [p for p in doc.paragraphs if p.text.strip() and not p.is_heading]
+    # Tach rieng cac doan cong thuc de bo qua kiem tra font/co chu/gian dong
+    # (cong thuc thuong dung font va co chu rieng -> de bao nham).
+    prose = [p for p in body if not (skip_math and is_math_heavy(p.text))]
 
-    for p in body:
+    for p in prose:
         issues += _check_font(p, profile["body_font_names"])
         issues += _check_size(p, profile["body_font_sizes"])
         issues += _check_alignment(p, profile.get("body_alignment"))
@@ -148,8 +152,8 @@ def check_formatting(doc: DocInfo, profile: dict) -> list[Issue]:
         )
         issues += _check_indent_spacing(p, profile)
 
-    # Kiem tra dong nhat: font/co chu pho bien nhat trong body
-    issues += _check_consistency(body)
+    # Kiem tra dong nhat: chi xet tren cac doan van xuoi (bo cong thuc)
+    issues += _check_consistency(prose)
 
     # Kiem tra le trang
     issues += _check_margins(doc, profile)

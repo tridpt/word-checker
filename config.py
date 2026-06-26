@@ -122,6 +122,10 @@ LIMITS = {
 # So doan trong lien tiep toi da cho phep truoc khi bao loi.
 MAX_CONSECUTIVE_EMPTY = 1
 
+# Bo qua cac doan nhieu ky hieu toan (cong thuc) khi kiem tra font/co chu/dau cau,
+# de tranh bao nham tren tai lieu hoc thuat. Dat False de kiem ca cong thuc.
+SKIP_MATH = True
+
 # Kiem tra tieu de muc va danh so de muc.
 HEADING_CHECKS = {
     "level_jump": True,           # nhay cap tieu de (Heading 1 -> Heading 3)

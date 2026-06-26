@@ -110,6 +110,12 @@ python cli.py sample.docx --html bao_cao.html
 - Nhảy cấp tiêu đề (ví dụ Heading 1 nhảy thẳng sang Heading 3)
 - Đánh số đề mục không liên tục (ví dụ 1, 2, 4 — thiếu 3; hoặc 1.1, 1.3 — thiếu 1.2)
 
+> **Giảm nhiễu công thức**: với tài liệu học thuật nhiều công thức toán, tool tự
+> nhận diện và **bỏ qua các đoạn nhiều ký hiệu toán** khi kiểm tra font/cỡ chữ/dấu
+> câu (tránh báo nhầm). Tắt bằng `--no-skip-math` hoặc đặt `SKIP_MATH=False` trong
+> `config.py`. Báo cáo cũng **gộp các lỗi định dạng lặp lại** thành một dòng tổng
+> hợp để dễ đọc.
+
 **Chính tả** (`checker/spelling.py`)
 - Dò theo từ điển lỗi thường gặp `dictionaries/common_typos.txt`
 - An toàn, ít báo nhầm vì chỉ báo các cặp lỗi đã biết chắc
@@ -253,6 +259,7 @@ word-checker/
    ├─ textcheck.py             # kiểm tra lỗi cơ học văn bản
    ├─ headings.py              # kiểm tra tiêu đề mục & đánh số
    ├─ limits.py                # kiểm tra giới hạn số từ / trang
+   ├─ mathdetect.py            # nhận diện đoạn công thức để giảm nhiễu
    ├─ stats.py                 # thống kê tài liệu (số từ, số trang, thời gian đọc)
    ├─ spelling.py              # kiểm tra chính tả (từ điển, offline)
    ├─ llm_spelling.py          # kiểm tra chính tả bằng AI/LLM (tùy chọn)

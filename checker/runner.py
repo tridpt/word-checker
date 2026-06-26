@@ -18,14 +18,15 @@ def run_checks(
     do_llm_spelling: bool = False,
     do_headings: bool = True,
     limits: dict | None = None,
+    skip_math: bool = True,
 ) -> list:
     """Doc tai lieu tu duong dan (hoac file-like) va tra ve danh sach Issue."""
     doc = load_document(path)
     issues = []
     if do_format:
-        issues += check_formatting(doc, profile)
+        issues += check_formatting(doc, profile, skip_math=skip_math)
     if do_text:
-        issues += check_text(doc, config.TEXT_CHECKS, config.MAX_CONSECUTIVE_EMPTY)
+        issues += check_text(doc, config.TEXT_CHECKS, config.MAX_CONSECUTIVE_EMPTY, skip_math=skip_math)
     if do_headings:
         issues += check_headings(doc, config.HEADING_CHECKS)
     if do_spelling:
