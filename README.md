@@ -1,6 +1,11 @@
 # Word Checker — Kiểm tra chính tả & định dạng file Word trước khi nộp
 
+<p align="center">
+  <img src="assets/logo.png" alt="Word Checker" width="520">
+</p>
+
 [![tests](https://github.com/tridpt/word-checker/actions/workflows/tests.yml/badge.svg)](https://github.com/tridpt/word-checker/actions/workflows/tests.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 Tool dòng lệnh (chạy offline) giúp rà soát file `.docx` trước khi nộp: kiểm tra
 định dạng (font, cỡ chữ, giãn dòng, canh lề, lề trang), lỗi cơ học văn bản (cách
@@ -211,12 +216,15 @@ word-checker/
 ├─ cli.py                      # điểm vào dòng lệnh
 ├─ webapp.py                   # web app kéo-thả (Flask)
 ├─ launch.py                   # launcher cho bản .exe (tự mở trình duyệt)
-├─ build_exe.bat               # script đóng gói thành .exe
+├─ build_exe.bat               # script đóng gói thành .exe (kèm icon)
+├─ gen_assets.py               # tạo icon + logo
 ├─ config.py                   # quy chuẩn định dạng (chỉnh ở đây)
 ├─ make_sample.py              # tạo file Word mẫu để thử
+├─ LICENSE                     # giấy phép MIT
 ├─ requirements.txt
 ├─ requirements-dev.txt        # thêm pytest để chạy test
 ├─ pytest.ini
+├─ assets/                     # icon.ico, icon.png, logo.png
 ├─ web/
 │  └─ index.html               # giao diện kéo-thả
 ├─ dictionaries/
@@ -241,5 +249,9 @@ word-checker/
 
 ## Hướng mở rộng
 
-- Tạo icon riêng cho bản .exe.
-- Thêm LICENSE và ảnh chụp giao diện vào README.
+- Thêm ảnh chụp giao diện thật vào README (chạy `python webapp.py` rồi chụp màn hình).
+- Kiểm tra thêm: trích dẫn, mục lục, đánh số hình/bảng.
+
+## Giấy phép
+
+Phát hành theo giấy phép [MIT](LICENSE) — tự do dùng, sửa, chia sẻ.

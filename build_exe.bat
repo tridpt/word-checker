@@ -4,7 +4,9 @@ REM Yeu cau: pip install pyinstaller
 REM Ket qua nam o thu muc dist\WordChecker.exe
 
 pyinstaller --noconfirm --onefile --name WordChecker ^
+  --icon "assets/icon.ico" ^
   --add-data "web;web" ^
+  --add-data "assets;assets" ^
   --add-data "dictionaries;dictionaries" ^
   launch.py
 

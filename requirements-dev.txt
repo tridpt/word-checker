@@ -1,2 +1,5 @@
 -r requirements.txt
 pytest>=8.0
+
+# Chi can de tao lai icon/logo bang gen_assets.py
+Pillow>=10.0

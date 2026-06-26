@@ -90,6 +90,14 @@ def index():
     )
 
 
+@app.route("/favicon.ico")
+def favicon():
+    path = resource_path("assets", "icon.ico")
+    if os.path.exists(path):
+        return send_file(path, mimetype="image/x-icon")
+    return ("", 404)
+
+
 @app.route("/check", methods=["POST"])
 def check():
     f, err = _valid_upload(request)
