@@ -14,6 +14,13 @@ import json
 import os
 import sys
 
+# Dam bao in tieng Viet ra console khong bi loi tren Windows (code page cp1252).
+for _stream in (sys.stdout, sys.stderr):
+    try:
+        _stream.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
+
 import config
 from checker.annotate import annotate
 from checker.autofix import autofix
@@ -152,6 +159,16 @@ def run(args) -> int:
             write_html_multi(args.html, results)
         print(f"  Da xuat bao cao HTML: {args.html}\n")
 
+    # Xuat PDF (chi file dau tien neu kiem nhieu file)
+    if args.pdf:
+        from checker.pdf_report import write_pdf
+        f0, iss0 = results[0]
+        try:
+            write_pdf(args.pdf, f0, iss0, stats_by_file.get(f0))
+            print(f"  Da xuat bao cao PDF: {args.pdf}\n")
+        except Exception as e:
+            print(f"  Khong tao duoc PDF: {e}", file=sys.stderr)
+
     # Xuat JSON
     if args.json:
         payload = [
@@ -196,6 +213,7 @@ def main():
     parser.add_argument("--max-pages", type=int, help="Canh bao neu vuot so trang (uoc tinh) nay")
     parser.add_argument("--out", metavar="FILE", help="Ten file ket qua khi dung --fix (mac dinh: *_fixed.docx)")
     parser.add_argument("--html", metavar="OUT", help="Xuat bao cao ra file HTML")
+    parser.add_argument("--pdf", metavar="OUT", help="Xuat bao cao ra file PDF")
     parser.add_argument("--json", metavar="OUT", help="Xuat ket qua ra file JSON (cho tu dong hoa)")
     parser.add_argument("--annotate", action="store_true", help="Xuat ban sao .docx co comment tai cho loi (*_commented.docx)")
     parser.add_argument("--no-format", action="store_true", help="Bo qua kiem tra dinh dang")

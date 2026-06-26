@@ -29,6 +29,9 @@ python cli.py bai_tap.docx
 # Xuất thêm báo cáo HTML để xem cho dễ
 python cli.py bai_tap.docx --html bao_cao.html
 
+# Xuất báo cáo PDF (tiện gửi/nộp kèm)
+python cli.py bai_tap.docx --pdf bao_cao.pdf
+
 # Bỏ qua một loại kiểm tra nếu muốn
 python cli.py bai_tap.docx --no-spelling
 python cli.py bai_tap.docx --no-format
@@ -126,10 +129,10 @@ pip install -r requirements.txt
 python webapp.py
 ```
 
-Mở trình duyệt tại http://127.0.0.1:5000, kéo file `.docx` vào, chọn quy chuẩn
-rồi bấm **Kiểm tra** để xem báo cáo ngay trên trang, **Tự động sửa & tải về**
-để nhận file đã sửa, hoặc **Tải file có chú thích lỗi** để nhận bản `.docx` có
-comment tại từng chỗ lỗi (mở bằng Word xem được).
+Mở trình duyệt tại http://127.0.0.1:5000, kéo **một hoặc nhiều** file `.docx` vào,
+chọn quy chuẩn rồi bấm **Kiểm tra** để xem báo cáo ngay trên trang, **Tự động sửa
+& tải về** để nhận file đã sửa, **Tải file có chú thích lỗi** để nhận bản `.docx`
+có comment, hoặc **Tải báo cáo PDF**. Có nút đổi **giao diện sáng/tối** ở góc trên.
 
 Web app chạy cục bộ (localhost), file upload chỉ được xử lý tạm rồi xóa, không
 gửi đi đâu và không lưu lại. Lưu ý: không có lớp xác thực, nên đừng mở cổng này
@@ -259,13 +262,14 @@ word-checker/
    ├─ learn_profile.py         # học quy chuẩn định dạng từ file .docx mẫu
    ├─ resources.py             # phân giải đường dẫn tài nguyên (dev + .exe)
    ├─ issues.py                # cấu trúc một "lỗi"
-   └─ report.py                # in kết quả + xuất HTML
+   ├─ report.py                # in kết quả + xuất HTML
+   └─ pdf_report.py            # xuất báo cáo PDF (font Unicode tiếng Việt)
 ```
 
 ## Hướng mở rộng
 
-- Thêm ảnh chụp giao diện thật vào README (chạy `python webapp.py` rồi chụp màn hình).
-- Kiểm tra thêm: trích dẫn, mục lục, đánh số hình/bảng.
+- Tạo GitHub Release đính kèm sẵn file `.exe` để tải về chạy ngay.
+- Tiếp tục mở rộng từ điển chính tả `dictionaries/common_typos.txt`.
 
 ## Giấy phép
 

@@ -40,3 +40,40 @@ sâu xắc = sâu sắc
 xúc tích = súc tích
 giành dụm = dành dụm
 tranh dành = tranh giành
+
+# === Bo sung: cac loi chinh ta pho bien khac (do tin cao) ===
+
+# ch / tr
+chăn trở = trăn trở
+trau truốt = trau chuốt
+che trở = che chở
+chỉnh chu = chỉn chu
+trân thành = chân thành
+
+# d / gi / r
+giành cho = dành cho
+dấu giếm = giấu giếm
+giữ liệu = dữ liệu
+dòng dã = ròng rã
+
+# hoi / nga
+rãnh rỗi = rảnh rỗi
+bải bỏ = bãi bỏ
+sĩ nhục = sỉ nhục
+nghĩ ngơi = nghỉ ngơi
+suy nghỉ = suy nghĩ
+nổ lực = nỗ lực
+cũng cố = củng cố
+đã kích = đả kích
+thẳng thắng = thẳng thắn
+
+# tu thuong viet sai
+khoảng khắc = khoảnh khắc
+vô vàng = vô vàn
+tựu chung = tựu trung
+đắng đo = đắn đo
+cập nhập = cập nhật
+chín mùi = chín muồi
+khắc khe = khắt khe
+lãng mạng = lãng mạn
+sát nhập = sáp nhập

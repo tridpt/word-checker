@@ -212,6 +212,40 @@ def annotate_route():
     )
 
 
+@app.route("/pdf", methods=["POST"])
+def pdf_route():
+    f, err = _valid_upload(request)
+    if err:
+        return jsonify({"error": err}), 400
+
+    profile = _resolve_profile(request)
+    do_format = request.form.get("format", "1") == "1"
+    do_text = request.form.get("text", "1") == "1"
+    do_spelling = request.form.get("spelling", "1") == "1"
+    do_headings = request.form.get("headings", "1") == "1"
+
+    tmp_in = _save_upload(f)
+    fd, tmp_out = tempfile.mkstemp(suffix=".pdf")
+    os.close(fd)
+    try:
+        from checker.pdf_report import write_pdf
+        issues = run_checks(tmp_in, profile, do_format, do_text, do_spelling,
+                            do_headings=do_headings)
+        stats = compute_stats(load_document(tmp_in))
+        write_pdf(tmp_out, f.filename, issues, stats)
+    except Exception as e:
+        return jsonify({"error": f"Khong tao duoc PDF: {e}"}), 400
+    finally:
+        try:
+            os.remove(tmp_in)
+        except OSError:
+            pass
+
+    base, _ = os.path.splitext(f.filename)
+    return send_file(tmp_out, as_attachment=True,
+                     download_name=f"{base}_bao_cao.pdf", mimetype="application/pdf")
+
+
 if __name__ == "__main__":
     print("Mo trinh duyet tai: http://127.0.0.1:5000")
     app.run(host="127.0.0.1", port=5000, debug=False)

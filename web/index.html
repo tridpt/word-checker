@@ -6,59 +6,73 @@
 <title>Kiểm tra file Word trước khi nộp</title>
 <link rel="icon" href="/favicon.ico" type="image/x-icon">
 <style>
-  :root { --blue:#2b6cb0; --bg:#f4f6f8; --border:#e0e4e8; }
+  :root {
+    --blue:#2b6cb0; --bg:#f4f6f8; --panel:#ffffff; --border:#e0e4e8;
+    --text:#222; --muted:#667; --soft:#f4f6f8; --err-bg:#fff5f5; --warn-bg:#fffaf0;
+    --stat-bg:#eef4fb; --stat-border:#d4e2f0; --stat-text:#2b4d6b;
+  }
+  [data-theme="dark"] {
+    --blue:#4a90d9; --bg:#1a1d21; --panel:#24282e; --border:#3a4048;
+    --text:#e6e8ea; --muted:#9aa4ae; --soft:#2b3038; --err-bg:#3a2526; --warn-bg:#3a3326;
+    --stat-bg:#222d3a; --stat-border:#33445a; --stat-text:#cfe0f0;
+  }
   * { box-sizing: border-box; }
-  body { font-family: "Segoe UI", Arial, sans-serif; margin:0; background:var(--bg); color:#222; }
-  header { background:var(--blue); color:#fff; padding:18px 24px; }
+  body { font-family: "Segoe UI", Arial, sans-serif; margin:0; background:var(--bg); color:var(--text); transition:.2s; }
+  header { background:var(--blue); color:#fff; padding:18px 24px; display:flex; justify-content:space-between; align-items:center; }
   header h1 { margin:0; font-size:20px; }
   header p { margin:4px 0 0; opacity:.9; font-size:13px; }
+  #themeBtn { background:rgba(255,255,255,.18); border:none; color:#fff; padding:8px 14px; border-radius:8px; cursor:pointer; font-size:14px; }
   main { max-width:980px; margin:24px auto; padding:0 16px; }
-  .panel { background:#fff; border:1px solid var(--border); border-radius:10px; padding:20px; margin-bottom:20px; }
-  #drop { border:2px dashed #b8c2cc; border-radius:12px; padding:40px; text-align:center; color:#667; cursor:pointer; transition:.15s; }
-  #drop.over { border-color:var(--blue); background:#eef4fb; color:var(--blue); }
+  .panel { background:var(--panel); border:1px solid var(--border); border-radius:10px; padding:20px; margin-bottom:20px; }
+  #drop { border:2px dashed #9fb0c0; border-radius:12px; padding:36px; text-align:center; color:var(--muted); cursor:pointer; transition:.15s; }
+  #drop.over { border-color:var(--blue); background:var(--soft); color:var(--blue); }
   #drop strong { color:var(--blue); }
   .opts { display:flex; flex-wrap:wrap; gap:16px; align-items:center; margin-top:16px; font-size:14px; }
   .opts label { display:flex; align-items:center; gap:6px; }
-  select { padding:6px 8px; border:1px solid var(--border); border-radius:6px; }
+  select, input[type=file] { padding:6px 8px; border:1px solid var(--border); border-radius:6px; background:var(--panel); color:var(--text); }
   .btns { margin-top:16px; display:flex; gap:10px; flex-wrap:wrap; }
   button { border:none; border-radius:8px; padding:10px 16px; font-size:14px; cursor:pointer; }
   .primary { background:var(--blue); color:#fff; }
-  .ghost { background:#e8edf2; color:#333; }
+  .ghost { background:var(--soft); color:var(--text); border:1px solid var(--border); }
   button:disabled { opacity:.5; cursor:not-allowed; }
   .summary { display:flex; gap:18px; flex-wrap:wrap; margin-bottom:14px; }
-  .docstats { background:#eef4fb; border:1px solid #d4e2f0; border-radius:8px; padding:10px 16px; margin-bottom:14px; color:#2b4d6b; font-size:14px; }
-  .stat { background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:10px 16px; min-width:90px; text-align:center; }
+  .docstats { background:var(--stat-bg); border:1px solid var(--stat-border); border-radius:8px; padding:10px 16px; margin-bottom:14px; color:var(--stat-text); font-size:14px; }
+  .stat { background:var(--soft); border:1px solid var(--border); border-radius:8px; padding:10px 16px; min-width:90px; text-align:center; }
   .stat b { display:block; font-size:22px; }
-  .stat span { font-size:12px; color:#667; }
+  .stat span { font-size:12px; color:var(--muted); }
   table { border-collapse:collapse; width:100%; font-size:14px; }
   th,td { border:1px solid var(--border); padding:8px 10px; text-align:left; vertical-align:top; }
-  th { background:var(--blue); color:#fff; position:sticky; top:0; }
-  tr.error td { background:#fff5f5; }
-  tr.warning td { background:#fffaf0; }
-  td.ex { font-family:Consolas,monospace; font-size:13px; color:#444; }
+  th { background:var(--blue); color:#fff; }
+  tr.error td { background:var(--err-bg); }
+  tr.warning td { background:var(--warn-bg); }
+  td.ex { font-family:Consolas,monospace; font-size:13px; color:var(--muted); }
   .tag { font-size:12px; padding:2px 8px; border-radius:10px; color:#fff; }
   .tag.error { background:#c53030; }
   .tag.warning { background:#dd6b20; }
   .ok { color:#2f855a; font-weight:bold; font-size:16px; }
   .err-msg { color:#c53030; }
-  .muted { color:#778; font-size:13px; }
+  .muted { color:var(--muted); font-size:13px; }
   #fileName { margin-top:10px; font-weight:bold; color:var(--blue); }
+  .filehead { font-size:16px; font-weight:bold; margin:18px 0 10px; color:var(--blue); border-bottom:2px solid var(--blue); padding-bottom:4px; }
   .hidden { display:none; }
 </style>
 </head>
 <body>
 <header>
-  <h1>Kiểm tra chính tả &amp; định dạng file Word</h1>
-  <p>Kéo file .docx vào đây để rà soát trước khi nộp — chạy cục bộ trên máy bạn.</p>
+  <div>
+    <h1>Kiểm tra chính tả &amp; định dạng file Word</h1>
+    <p>Kéo một hoặc nhiều file .docx vào đây để rà soát trước khi nộp.</p>
+  </div>
+  <button id="themeBtn" title="Đổi giao diện sáng/tối">🌙 Tối</button>
 </header>
 
 <main>
   <div class="panel">
     <div id="drop">
-      <p>📄 <strong>Kéo &amp; thả</strong> file .docx vào đây, hoặc bấm để chọn file.</p>
+      <p>📄 <strong>Kéo &amp; thả</strong> file .docx vào đây (có thể nhiều file), hoặc bấm để chọn.</p>
       <p class="muted">Chỉ hỗ trợ định dạng .docx (Word). File không được gửi đi đâu cả.</p>
     </div>
-    <input type="file" id="fileInput" accept=".docx" class="hidden">
+    <input type="file" id="fileInput" accept=".docx" multiple class="hidden">
     <div id="fileName"></div>
 
     <div class="opts">
@@ -69,7 +83,7 @@
           {% endfor %}
         </select>
       </label>
-      <label title="Tùy chọn: học quy chuẩn từ một file .docx mẫu (sẽ ưu tiên hơn lựa chọn quy chuẩn ở trên)">
+      <label title="Tùy chọn: học quy chuẩn từ một file .docx mẫu">
         hoặc file mẫu:
         <input type="file" id="templateInput" accept=".docx">
       </label>
@@ -80,18 +94,18 @@
       {% if llm_enabled %}
       <label title="Dùng AI/LLM để bắt lỗi rộng hơn (chậm hơn)"><input type="checkbox" id="optLlm"> Chính tả AI</label>
       {% endif %}
-      <label title="Khi bấm Tự động sửa, sửa luôn cả định dạng (font, cỡ chữ, giãn dòng, canh lề) theo quy chuẩn"><input type="checkbox" id="optFixFormat"> Sửa cả định dạng</label>
+      <label title="Khi bấm Tự động sửa, sửa luôn cả định dạng theo quy chuẩn"><input type="checkbox" id="optFixFormat"> Sửa cả định dạng</label>
     </div>
 
     <div class="btns">
       <button class="primary" id="btnCheck" disabled>Kiểm tra</button>
       <button class="ghost" id="btnFix" disabled>Tự động sửa &amp; tải về</button>
       <button class="ghost" id="btnAnnotate" disabled>Tải file có chú thích lỗi</button>
+      <button class="ghost" id="btnPdf" disabled>Tải báo cáo PDF</button>
     </div>
   </div>
 
   <div class="panel hidden" id="resultPanel">
-    <div id="resultHead"></div>
     <div id="resultBody"></div>
   </div>
 </main>
@@ -103,38 +117,47 @@ const fileNameEl = document.getElementById('fileName');
 const btnCheck = document.getElementById('btnCheck');
 const btnFix = document.getElementById('btnFix');
 const btnAnnotate = document.getElementById('btnAnnotate');
+const btnPdf = document.getElementById('btnPdf');
 const resultPanel = document.getElementById('resultPanel');
-const resultHead = document.getElementById('resultHead');
 const resultBody = document.getElementById('resultBody');
-let selectedFile = null;
+const themeBtn = document.getElementById('themeBtn');
+let selectedFiles = [];
 
-function setFile(file) {
-  if (!file) return;
-  if (!file.name.toLowerCase().endsWith('.docx')) {
-    alert('Chỉ hỗ trợ file .docx');
-    return;
-  }
-  selectedFile = file;
-  fileNameEl.textContent = 'Đã chọn: ' + file.name;
-  btnCheck.disabled = false;
-  btnFix.disabled = false;
-  btnAnnotate.disabled = false;
+// ----- Dark mode -----
+function applyTheme(t) {
+  document.documentElement.setAttribute('data-theme', t === 'dark' ? 'dark' : 'light');
+  themeBtn.textContent = t === 'dark' ? '☀️ Sáng' : '🌙 Tối';
+  localStorage.setItem('wc-theme', t);
+}
+applyTheme(localStorage.getItem('wc-theme') || 'light');
+themeBtn.addEventListener('click', () => {
+  const cur = document.documentElement.getAttribute('data-theme');
+  applyTheme(cur === 'dark' ? 'light' : 'dark');
+});
+
+// ----- File selection -----
+function setFiles(fileList) {
+  const files = Array.from(fileList).filter(f => f.name.toLowerCase().endsWith('.docx'));
+  if (!files.length) { alert('Chỉ hỗ trợ file .docx'); return; }
+  selectedFiles = files;
+  fileNameEl.textContent = files.length === 1
+    ? 'Đã chọn: ' + files[0].name
+    : `Đã chọn ${files.length} file: ` + files.map(f => f.name).join(', ');
+  [btnCheck, btnFix, btnAnnotate, btnPdf].forEach(b => b.disabled = false);
 }
 
 drop.addEventListener('click', () => fileInput.click());
-fileInput.addEventListener('change', e => setFile(e.target.files[0]));
+fileInput.addEventListener('change', e => setFiles(e.target.files));
 ['dragenter','dragover'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add('over'); }));
 ['dragleave','drop'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.remove('over'); }));
-drop.addEventListener('drop', e => setFile(e.dataTransfer.files[0]));
+drop.addEventListener('drop', e => setFiles(e.dataTransfer.files));
 
-function buildForm() {
+function buildForm(file) {
   const fd = new FormData();
-  fd.append('file', selectedFile);
+  fd.append('file', file);
   fd.append('profile', document.getElementById('profile').value);
   const tplEl = document.getElementById('templateInput');
-  if (tplEl && tplEl.files && tplEl.files[0]) {
-    fd.append('template', tplEl.files[0]);
-  }
+  if (tplEl && tplEl.files && tplEl.files[0]) fd.append('template', tplEl.files[0]);
   fd.append('format', document.getElementById('optFormat').checked ? '1' : '0');
   fd.append('text', document.getElementById('optText').checked ? '1' : '0');
   fd.append('headings', document.getElementById('optHeading').checked ? '1' : '0');
@@ -145,77 +168,82 @@ function buildForm() {
   return fd;
 }
 
+// ----- Check (supports many files) -----
 btnCheck.addEventListener('click', async () => {
-  if (!selectedFile) return;
+  if (!selectedFiles.length) return;
   btnCheck.disabled = true; btnCheck.textContent = 'Đang kiểm tra...';
+  resultPanel.classList.remove('hidden');
+  resultBody.innerHTML = '<p class="muted">Đang xử lý...</p>';
   try {
-    const res = await fetch('/check', { method:'POST', body: buildForm() });
-    const data = await res.json();
-    if (!res.ok) { showError(data.error || 'Lỗi không xác định'); return; }
-    render(data);
+    const blocks = [];
+    for (const file of selectedFiles) {
+      const res = await fetch('/check', { method:'POST', body: buildForm(file) });
+      const data = await res.json();
+      if (!res.ok) { blocks.push(errorBlock(file.name, data.error)); continue; }
+      blocks.push(renderBlock(data));
+    }
+    resultBody.innerHTML = blocks.join('');
   } catch (e) {
-    showError('Không kết nối được tới server.');
+    resultBody.innerHTML = '<p class="err-msg">Không kết nối được tới server.</p>';
   } finally {
     btnCheck.disabled = false; btnCheck.textContent = 'Kiểm tra';
   }
 });
 
 async function downloadFrom(endpoint, btn, busyLabel, normalLabel, suffix) {
-  if (!selectedFile) return;
-  btn.disabled = true; const old = btn.textContent; btn.textContent = busyLabel;
+  if (!selectedFiles.length) return;
+  btn.disabled = true; btn.textContent = busyLabel;
   try {
-    const res = await fetch(endpoint, { method:'POST', body: buildForm() });
-    if (!res.ok) { const d = await res.json(); showError(d.error || 'Có lỗi xảy ra'); return; }
-    const blob = await res.blob();
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = selectedFile.name.replace(/\.docx$/i, suffix);
-    a.click();
-    URL.revokeObjectURL(url);
+    for (const file of selectedFiles) {
+      const res = await fetch(endpoint, { method:'POST', body: buildForm(file) });
+      if (!res.ok) { const d = await res.json(); alert(d.error || 'Có lỗi xảy ra'); continue; }
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = file.name.replace(/\.docx$/i, suffix);
+      a.click();
+      URL.revokeObjectURL(url);
+    }
   } catch (e) {
-    showError('Không kết nối được tới server.');
+    alert('Không kết nối được tới server.');
   } finally {
-    btn.disabled = false; btn.textContent = old;
+    btn.disabled = false; btn.textContent = normalLabel;
   }
 }
 
 btnFix.addEventListener('click', () =>
   downloadFrom('/fix', btnFix, 'Đang sửa...', 'Tự động sửa & tải về', '_fixed.docx'));
-
 btnAnnotate.addEventListener('click', () =>
   downloadFrom('/annotate', btnAnnotate, 'Đang tạo...', 'Tải file có chú thích lỗi', '_commented.docx'));
-
-function showError(msg) {
-  resultPanel.classList.remove('hidden');
-  resultHead.innerHTML = '<p class="err-msg">⚠ ' + escapeHtml(msg) + '</p>';
-  resultBody.innerHTML = '';
-}
+btnPdf.addEventListener('click', () =>
+  downloadFrom('/pdf', btnPdf, 'Đang tạo PDF...', 'Tải báo cáo PDF', '_bao_cao.pdf'));
 
 function escapeHtml(s) {
   return (s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
 
-function render(data) {
-  resultPanel.classList.remove('hidden');
+function errorBlock(name, msg) {
+  return `<div class="filehead">${escapeHtml(name)}</div><p class="err-msg">⚠ ${escapeHtml(msg||'Lỗi không xác định')}</p>`;
+}
+
+function renderBlock(data) {
   const s = data.summary;
-  let cats = Object.entries(s.by_category).map(([k,v]) =>
-    `<div class="stat"><b>${v}</b><span>${escapeHtml(k)}</span></div>`).join('');
+  let head = selectedFiles.length > 1 ? `<div class="filehead">${escapeHtml(data.filename)}</div>` : '';
   let statsHtml = '';
   if (data.stats) {
     const t = data.stats;
     statsHtml = `<div class="docstats">📊 ${t.words} từ · ${t.paragraphs} đoạn · ${t.headings} tiêu đề · ~${t.estimated_pages} trang · ~${t.reading_minutes} phút đọc</div>`;
   }
-  resultHead.innerHTML = statsHtml +
-    `<div class="summary">
+  let cats = Object.entries(s.by_category).map(([k,v]) =>
+    `<div class="stat"><b>${v}</b><span>${escapeHtml(k)}</span></div>`).join('');
+  let summary = `<div class="summary">
        <div class="stat"><b>${s.total}</b><span>tổng vấn đề</span></div>
        <div class="stat"><b>${s.errors}</b><span>lỗi nghiêm trọng</span></div>
        ${cats}
      </div>`;
-
   if (s.total === 0) {
-    resultBody.innerHTML = '<p class="ok">✓ Không phát hiện lỗi nào. File sẵn sàng để nộp!</p>';
-    return;
+    return head + statsHtml + summary + '<p class="ok">✓ Không phát hiện lỗi nào. File sẵn sàng để nộp!</p>';
   }
   let rows = data.issues.map(it =>
     `<tr class="${it.severity}">
@@ -226,9 +254,8 @@ function render(data) {
        <td class="ex">${escapeHtml(it.excerpt)}</td>
        <td>${escapeHtml(it.suggestion)}</td>
      </tr>`).join('');
-  resultBody.innerHTML =
-    `<table><thead><tr><th></th><th>Nhóm</th><th>Vị trí</th><th>Mô tả</th><th>Trích đoạn</th><th>Gợi ý</th></tr></thead>
-     <tbody>${rows}</tbody></table>`;
+  let table = `<table><thead><tr><th></th><th>Nhóm</th><th>Vị trí</th><th>Mô tả</th><th>Trích đoạn</th><th>Gợi ý</th></tr></thead><tbody>${rows}</tbody></table>`;
+  return head + statsHtml + summary + table;
 }
 </script>
 </body>
