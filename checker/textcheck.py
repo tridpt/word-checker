@@ -232,6 +232,32 @@ def _check_mixed_quotes(doc: DocInfo) -> list[Issue]:
     return []
 
 
+def _check_placeholder(p: ParagraphInfo) -> list[Issue]:
+    issues = []
+    # Cac mau text "bo quen" thuong gap; giu danh sach hep de tranh bao nham.
+    patterns = [
+        (r"lorem ipsum", "Lorem ipsum"),
+        (r"\bTODO\b", "TODO"),
+        (r"\bFIXME\b", "FIXME"),
+        (r"\[\.\.\.\]", "[...]"),
+        (r"x{4,}", "chuoi x..."),
+        (r"\bchen (?:noi dung|o day|vao day)\b", "ghi chu chen noi dung"),
+    ]
+    for pat, label in patterns:
+        for m in re.finditer(pat, p.text, re.IGNORECASE):
+            issues.append(
+                Issue(
+                    category=CATEGORY_TEXT,
+                    severity=SEVERITY_WARNING,
+                    message=f"Co the la chu con bo quen: '{m.group(0)}' ({label})",
+                    paragraph=p.number,
+                    excerpt=_excerpt_around(p.text, m.start()),
+                    suggestion="Kiem tra va thay bang noi dung that",
+                )
+            )
+    return issues
+
+
 def check_text(doc: DocInfo, checks: dict, max_consecutive_empty: int) -> list[Issue]:
     issues: list[Issue] = []
     for p in doc.paragraphs:
@@ -253,6 +279,8 @@ def check_text(doc: DocInfo, checks: dict, max_consecutive_empty: int) -> list[I
             issues += _check_sentence_capitalization(p)
         if checks.get("double_hyphen"):
             issues += _check_double_hyphen(p)
+        if checks.get("placeholder"):
+            issues += _check_placeholder(p)
 
     if checks.get("mixed_quotes"):
         issues += _check_mixed_quotes(doc)

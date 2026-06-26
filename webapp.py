@@ -145,6 +145,8 @@ def fix():
         return jsonify({"error": err}), 400
 
     do_spelling = request.form.get("spelling", "1") == "1"
+    do_fix_format = request.form.get("fix_format", "0") == "1"
+    profile = _resolve_profile(request) if do_fix_format else None
 
     tmp_in = _save_upload(f)
     fd, tmp_out = tempfile.mkstemp(suffix=".docx")
@@ -154,6 +156,8 @@ def fix():
             tmp_in, tmp_out,
             max_consecutive_empty=config.MAX_CONSECUTIVE_EMPTY,
             fix_spelling=do_spelling,
+            fix_format=do_fix_format,
+            profile=profile,
         )
     except Exception as e:
         return jsonify({"error": f"Khong sua duoc file: {e}"}), 400

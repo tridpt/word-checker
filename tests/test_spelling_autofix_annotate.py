@@ -51,3 +51,18 @@ def test_annotate_adds_comments(make_doc, tmp_path):
     stats = annotate(path, out, issues)
     assert stats["comments_added"] >= 1
     assert os.path.exists(out)
+
+
+def test_autofix_formatting(make_doc, tmp_path):
+    # File dung font Arial 11 -> sau khi sua theo profile hanh_chinh phai het loi font/co chu
+    path = make_doc([{"text": "Doan sai dinh dang.", "font": "Arial", "size": 11,
+                      "align": None, "spacing": 1.0}])
+    profile = config.get_profile(None)
+    out = os.path.join(tmp_path, "fixed_fmt.docx")
+    stats = autofix(path, out, fix_format=True, profile=profile)
+    assert stats["format_fixes"] > 0
+
+    from checker.formatting import check_formatting
+    issues = check_formatting(load_document(out), profile)
+    assert not any("Font khong dung" in it.message for it in issues)
+    assert not any("Co chu khong dung" in it.message for it in issues)

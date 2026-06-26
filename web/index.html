@@ -80,6 +80,7 @@
       {% if llm_enabled %}
       <label title="Dùng AI/LLM để bắt lỗi rộng hơn (chậm hơn)"><input type="checkbox" id="optLlm"> Chính tả AI</label>
       {% endif %}
+      <label title="Khi bấm Tự động sửa, sửa luôn cả định dạng (font, cỡ chữ, giãn dòng, canh lề) theo quy chuẩn"><input type="checkbox" id="optFixFormat"> Sửa cả định dạng</label>
     </div>
 
     <div class="btns">
@@ -140,6 +141,7 @@ function buildForm() {
   fd.append('spelling', document.getElementById('optSpelling').checked ? '1' : '0');
   const llmEl = document.getElementById('optLlm');
   fd.append('llm', (llmEl && llmEl.checked) ? '1' : '0');
+  fd.append('fix_format', document.getElementById('optFixFormat').checked ? '1' : '0');
   return fd;
 }
 

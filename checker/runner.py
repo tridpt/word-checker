@@ -4,6 +4,7 @@ import config
 from .document import load_document
 from .formatting import check_formatting
 from .headings import check_headings
+from .limits import check_limits
 from .spelling import check_spelling
 from .textcheck import check_text
 
@@ -16,6 +17,7 @@ def run_checks(
     do_spelling: bool = True,
     do_llm_spelling: bool = False,
     do_headings: bool = True,
+    limits: dict | None = None,
 ) -> list:
     """Doc tai lieu tu duong dan (hoac file-like) va tra ve danh sach Issue."""
     doc = load_document(path)
@@ -31,4 +33,5 @@ def run_checks(
     if do_llm_spelling:
         from .llm_spelling import check_spelling_llm
         issues += check_spelling_llm(doc)
+    issues += check_limits(doc, limits if limits is not None else config.LIMITS)
     return issues

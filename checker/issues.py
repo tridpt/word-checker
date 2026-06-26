@@ -12,6 +12,7 @@ CATEGORY_TEXT = "Van ban"
 CATEGORY_SPELLING = "Chinh ta"
 CATEGORY_SPELLING_AI = "Chinh ta (AI)"
 CATEGORY_HEADING = "Tieu de"
+CATEGORY_LIMIT = "Gioi han"
 
 
 @dataclass

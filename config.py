@@ -109,6 +109,14 @@ TEXT_CHECKS = {
     "sentence_capitalization": True,  # viet hoa dau cau sau . ! ?
     "double_hyphen": True,       # dung '--' thay vi gach ngang
     "mixed_quotes": True,        # lan lon nhay thang va nhay cong
+    "placeholder": True,         # chu con bo quen (lorem ipsum, TODO, [...]...)
+}
+
+# Gioi han so tu / so trang (None = khong kiem tra). Co the override bang CLI.
+LIMITS = {
+    "min_words": None,
+    "max_words": None,
+    "max_pages": None,
 }
 
 # So doan trong lien tiep toi da cho phep truoc khi bao loi.

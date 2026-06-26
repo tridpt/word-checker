@@ -44,7 +44,17 @@ def _check_one(path: str, profile: dict, args) -> list:
         do_spelling=not args.no_spelling,
         do_llm_spelling=args.llm_spelling,
         do_headings=not args.no_headings,
+        limits=_limits_from_args(args),
     )
+
+
+def _limits_from_args(args) -> dict:
+    """Lay gioi han tu CLI; thieu thi dung gia tri trong config."""
+    return {
+        "min_words": args.min_words if args.min_words is not None else config.LIMITS.get("min_words"),
+        "max_words": args.max_words if args.max_words is not None else config.LIMITS.get("max_words"),
+        "max_pages": args.max_pages if args.max_pages is not None else config.LIMITS.get("max_pages"),
+    }
 
 
 def _suffix_path(src: str, suffix: str) -> str:
@@ -90,7 +100,7 @@ def run(args) -> int:
         return 2
 
     # Che do tu dong sua (chi ap dung khi chi dinh 1 file de an toan/de hieu)
-    if args.fix:
+    if args.fix or args.fix_format:
         if len(valid) != 1:
             print("Luu y: --fix chi ap dung cho mot file. Hay chi dinh dung mot file .docx.", file=sys.stderr)
             return 2
@@ -99,9 +109,14 @@ def run(args) -> int:
             valid[0], out,
             max_consecutive_empty=config.MAX_CONSECUTIVE_EMPTY,
             fix_spelling=not args.no_spelling,
+            fix_format=args.fix_format,
+            profile=profile,
         )
-        print(f"  Da sua {stats['text_and_spelling_fixes']} loi van ban/chinh ta, "
-              f"xoa {stats['empty_paragraphs_removed']} doan trong thua.")
+        msg = (f"  Da sua {stats['text_and_spelling_fixes']} loi van ban/chinh ta, "
+               f"xoa {stats['empty_paragraphs_removed']} doan trong thua")
+        if args.fix_format:
+            msg += f", chinh {stats['format_fixes']} cho dinh dang"
+        print(msg + ".")
         print(f"  Da luu file da sua: {out}\n")
         print("  Kiem tra lai file da sua:")
         # kiem lai file da sua de bao cao phan con sot
@@ -175,6 +190,10 @@ def main():
     parser.add_argument("--profile", help=f"Profile quy chuan: {', '.join(config.PROFILES)} (mac dinh: {config.DEFAULT_PROFILE})")
     parser.add_argument("--template", metavar="REF.docx", help="Hoc quy chuan tu file .docx mau (uu tien hon --profile)")
     parser.add_argument("--fix", action="store_true", help="Tu dong sua loi co hoc/chinh ta, luu ra file moi")
+    parser.add_argument("--fix-format", action="store_true", help="Tu dong sua ca dinh dang theo profile (font, co chu, gian dong, canh le)")
+    parser.add_argument("--max-words", type=int, help="Canh bao neu vuot so tu nay")
+    parser.add_argument("--min-words", type=int, help="Canh bao neu thieu so tu nay")
+    parser.add_argument("--max-pages", type=int, help="Canh bao neu vuot so trang (uoc tinh) nay")
     parser.add_argument("--out", metavar="FILE", help="Ten file ket qua khi dung --fix (mac dinh: *_fixed.docx)")
     parser.add_argument("--html", metavar="OUT", help="Xuat bao cao ra file HTML")
     parser.add_argument("--json", metavar="OUT", help="Xuat ket qua ra file JSON (cho tu dong hoa)")

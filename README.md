@@ -44,6 +44,14 @@ python cli.py bai_tap.docx --template mau_chuan.docx
 python cli.py bai_tap.docx --fix
 python cli.py bai_tap.docx --fix --out ban_sach.docx
 
+# Sửa luôn cả định dạng (font, cỡ chữ, giãn dòng, canh lề, lề trang) theo profile
+python cli.py bai_tap.docx --fix-format
+python cli.py bai_tap.docx --fix-format --template mau_chuan.docx
+
+# Kiểm tra giới hạn số từ / số trang (vd tiểu luận phải dưới 2000 từ)
+python cli.py bai_tap.docx --max-words 2000 --min-words 500
+python cli.py bai_tap.docx --max-pages 10
+
 # Kiểm tra cả một thư mục chứa nhiều file .docx, gộp 1 báo cáo HTML
 python cli.py thu_muc_bai_tap --html bao_cao_tong.html
 
@@ -89,6 +97,11 @@ python cli.py sample.docx --html bao_cao.html
 - Thiếu viết hoa đầu câu (có chặn viết tắt và số thứ tự)
 - Dùng hai gạch nối `--` thay vì gạch ngang `–`
 - Lẫn lộn dấu nháy thẳng `"` và nháy cong `" "` trong tài liệu
+- Chữ còn bỏ quên (Lorem ipsum, TODO, FIXME, `[...]`, chuỗi `xxxx`...)
+
+**Giới hạn số từ / trang** (`checker/limits.py`, tùy chọn)
+- Cảnh báo khi vượt/thiếu số từ hoặc vượt số trang ước tính
+- Bật bằng `--max-words` / `--min-words` / `--max-pages` hoặc đặt trong `config.LIMITS`
 
 **Tiêu đề mục & đánh số** (`checker/headings.py`)
 - Nhảy cấp tiêu đề (ví dụ Heading 1 nhảy thẳng sang Heading 3)
@@ -172,8 +185,9 @@ lại của tool vẫn chạy offline bình thường.
 - Xóa các đoạn trống thừa
 - Sửa lỗi chính tả nằm trong từ điển (giữ nguyên kiểu viết hoa)
 
-Lỗi định dạng (font, cỡ chữ, giãn dòng, lề) cố ý KHÔNG tự sửa vì dễ làm hỏng bố
-cục — tool chỉ báo để bạn tự chỉnh trong Word.
+Thêm `--fix-format` sẽ sửa luôn cả **định dạng** theo profile: đổi font/cỡ chữ về
+giá trị chuẩn (chọn giá trị đang dùng phổ biến nhất để không gây lệch), đặt lại
+giãn dòng, canh lề, lề trang. Kết hợp với `--template` để sửa theo file mẫu.
 
 ## File Word có chú thích (--annotate)
 
@@ -235,6 +249,7 @@ word-checker/
    ├─ formatting.py            # kiểm tra định dạng
    ├─ textcheck.py             # kiểm tra lỗi cơ học văn bản
    ├─ headings.py              # kiểm tra tiêu đề mục & đánh số
+   ├─ limits.py                # kiểm tra giới hạn số từ / trang
    ├─ stats.py                 # thống kê tài liệu (số từ, số trang, thời gian đọc)
    ├─ spelling.py              # kiểm tra chính tả (từ điển, offline)
    ├─ llm_spelling.py          # kiểm tra chính tả bằng AI/LLM (tùy chọn)

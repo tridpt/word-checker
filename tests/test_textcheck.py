@@ -67,3 +67,13 @@ def test_mixed_quotes(make_doc):
 def test_no_mixed_quotes_when_consistent(make_doc):
     path = make_doc(['Cau chi dung nhay thang "abc" thoi.'])
     assert not any("lan lon" in m for m in _messages(path))
+
+
+def test_placeholder_todo(make_doc):
+    path = make_doc(["Phan nay TODO se viet sau."])
+    assert any("bo quen" in m for m in _messages(path))
+
+
+def test_placeholder_lorem(make_doc):
+    path = make_doc(["Lorem ipsum dolor sit amet."])
+    assert any("bo quen" in m for m in _messages(path))
