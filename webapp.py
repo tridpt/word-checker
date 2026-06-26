@@ -104,7 +104,8 @@ def check():
 
     tmp_path = _save_upload(f)
     try:
-        issues = run_checks(tmp_path, profile, do_format, do_text, do_spelling, do_llm)
+        issues = run_checks(tmp_path, profile, do_format, do_text, do_spelling, do_llm,
+                            do_headings=request.form.get("headings", "1") == "1")
     except Exception as e:
         return jsonify({"error": f"Khong doc duoc file: {e}"}), 400
     finally:

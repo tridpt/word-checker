@@ -11,6 +11,7 @@ CATEGORY_FORMAT = "Dinh dang"
 CATEGORY_TEXT = "Van ban"
 CATEGORY_SPELLING = "Chinh ta"
 CATEGORY_SPELLING_AI = "Chinh ta (AI)"
+CATEGORY_HEADING = "Tieu de"
 
 
 @dataclass

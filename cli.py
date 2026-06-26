@@ -41,6 +41,7 @@ def _check_one(path: str, profile: dict, args) -> list:
         do_text=not args.no_text,
         do_spelling=not args.no_spelling,
         do_llm_spelling=args.llm_spelling,
+        do_headings=not args.no_headings,
     )
 
 
@@ -176,6 +177,7 @@ def main():
     parser.add_argument("--annotate", action="store_true", help="Xuat ban sao .docx co comment tai cho loi (*_commented.docx)")
     parser.add_argument("--no-format", action="store_true", help="Bo qua kiem tra dinh dang")
     parser.add_argument("--no-text", action="store_true", help="Bo qua kiem tra loi co hoc van ban")
+    parser.add_argument("--no-headings", action="store_true", help="Bo qua kiem tra tieu de muc & danh so")
     parser.add_argument("--no-spelling", action="store_true", help="Bo qua kiem tra chinh ta")
     parser.add_argument("--llm-spelling", action="store_true", help="Bat kiem tra chinh ta bang AI/LLM (can cau hinh LLM_API_KEY)")
     args = parser.parse_args()

@@ -73,6 +73,7 @@
       </label>
       <label><input type="checkbox" id="optFormat" checked> Định dạng</label>
       <label><input type="checkbox" id="optText" checked> Lỗi văn bản</label>
+      <label><input type="checkbox" id="optHeading" checked> Tiêu đề</label>
       <label><input type="checkbox" id="optSpelling" checked> Chính tả</label>
       {% if llm_enabled %}
       <label title="Dùng AI/LLM để bắt lỗi rộng hơn (chậm hơn)"><input type="checkbox" id="optLlm"> Chính tả AI</label>
@@ -133,6 +134,7 @@ function buildForm() {
   }
   fd.append('format', document.getElementById('optFormat').checked ? '1' : '0');
   fd.append('text', document.getElementById('optText').checked ? '1' : '0');
+  fd.append('headings', document.getElementById('optHeading').checked ? '1' : '0');
   fd.append('spelling', document.getElementById('optSpelling').checked ? '1' : '0');
   const llmEl = document.getElementById('optLlm');
   fd.append('llm', (llmEl && llmEl.checked) ? '1' : '0');

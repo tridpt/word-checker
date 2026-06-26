@@ -111,3 +111,9 @@ TEXT_CHECKS = {
 
 # So doan trong lien tiep toi da cho phep truoc khi bao loi.
 MAX_CONSECUTIVE_EMPTY = 1
+
+# Kiem tra tieu de muc va danh so de muc.
+HEADING_CHECKS = {
+    "level_jump": True,           # nhay cap tieu de (Heading 1 -> Heading 3)
+    "numbering_sequence": True,   # danh so de muc khong lien tuc
+}

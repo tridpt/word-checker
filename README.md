@@ -82,6 +82,10 @@ python cli.py sample.docx --html bao_cao.html
 - Lặp từ liền nhau (chỉ với hư từ như "các các", "và và" — tránh báo nhầm từ láy)
 - Thiếu viết hoa đầu câu (có chặn viết tắt và số thứ tự)
 
+**Tiêu đề mục & đánh số** (`checker/headings.py`)
+- Nhảy cấp tiêu đề (ví dụ Heading 1 nhảy thẳng sang Heading 3)
+- Đánh số đề mục không liên tục (ví dụ 1, 2, 4 — thiếu 3; hoặc 1.1, 1.3 — thiếu 1.2)
+
 **Chính tả** (`checker/spelling.py`)
 - Dò theo từ điển lỗi thường gặp `dictionaries/common_typos.txt`
 - An toàn, ít báo nhầm vì chỉ báo các cặp lỗi đã biết chắc
@@ -219,6 +223,7 @@ word-checker/
    ├─ document.py              # đọc .docx, phân giải font hiệu lực
    ├─ formatting.py            # kiểm tra định dạng
    ├─ textcheck.py             # kiểm tra lỗi cơ học văn bản
+   ├─ headings.py              # kiểm tra tiêu đề mục & đánh số
    ├─ spelling.py              # kiểm tra chính tả (từ điển, offline)
    ├─ llm_spelling.py          # kiểm tra chính tả bằng AI/LLM (tùy chọn)
    ├─ autofix.py               # tự động sửa lỗi, lưu file mới
@@ -232,5 +237,5 @@ word-checker/
 
 ## Hướng mở rộng
 
-- Kiểm tra thêm: định dạng tiêu đề mục, đánh số đề mục tự động.
+- Kiểm tra thêm: dấu nháy/gạch lẫn lộn, thống kê tài liệu trên web.
 - Tạo icon riêng cho bản .exe.
