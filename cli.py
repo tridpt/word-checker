@@ -18,6 +18,7 @@ import config
 from checker.annotate import annotate
 from checker.autofix import autofix
 from checker.issues import SEVERITY_ERROR
+from checker.learn_profile import describe_profile, learn_profile
 from checker.report import print_report, write_html, write_html_multi
 from checker.runner import run_checks
 
@@ -55,6 +56,20 @@ def run(args) -> int:
         return 2
 
     profile = config.get_profile(args.profile)
+
+    # Hoc quy chuan tu file mau neu co --template (uu tien hon --profile)
+    if args.template:
+        if not os.path.exists(args.template) or not args.template.lower().endswith(".docx"):
+            print(f"Loi: file mau '{args.template}' khong ton tai hoac khong phai .docx", file=sys.stderr)
+            return 2
+        try:
+            profile = learn_profile(args.template)
+        except Exception as e:
+            print(f"Loi khi hoc quy chuan tu file mau: {e}", file=sys.stderr)
+            return 2
+        print(f"  Da hoc quy chuan tu file mau: {args.template}")
+        print(describe_profile(profile))
+        print()
 
     if args.llm_spelling and not config.llm_enabled():
         print("Loi: --llm-spelling can cau hinh LLM_API_KEY (xem .env.example).", file=sys.stderr)
@@ -153,6 +168,7 @@ def main():
     )
     parser.add_argument("file", help="Duong dan toi file .docx hoac thu muc chua cac file .docx")
     parser.add_argument("--profile", help=f"Profile quy chuan: {', '.join(config.PROFILES)} (mac dinh: {config.DEFAULT_PROFILE})")
+    parser.add_argument("--template", metavar="REF.docx", help="Hoc quy chuan tu file .docx mau (uu tien hon --profile)")
     parser.add_argument("--fix", action="store_true", help="Tu dong sua loi co hoc/chinh ta, luu ra file moi")
     parser.add_argument("--out", metavar="FILE", help="Ten file ket qua khi dung --fix (mac dinh: *_fixed.docx)")
     parser.add_argument("--html", metavar="OUT", help="Xuat bao cao ra file HTML")

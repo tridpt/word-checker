@@ -17,6 +17,7 @@ import config
 from checker.annotate import annotate
 from checker.autofix import autofix
 from checker.issues import SEVERITY_ERROR
+from checker.learn_profile import learn_profile
 from checker.resources import resource_path
 from checker.runner import run_checks
 
@@ -51,6 +52,21 @@ def _save_upload(file_storage) -> str:
     return tmp_path
 
 
+def _resolve_profile(req):
+    """Lay profile: uu tien hoc tu file mau 'template' neu co, nguoc lai theo ten."""
+    tpl = req.files.get("template")
+    if tpl and tpl.filename and tpl.filename.lower().endswith(".docx"):
+        tmp = _save_upload(tpl)
+        try:
+            return learn_profile(tmp)
+        finally:
+            try:
+                os.remove(tmp)
+            except OSError:
+                pass
+    return config.get_profile(req.form.get("profile", config.DEFAULT_PROFILE))
+
+
 def _valid_upload(req):
     if "file" not in req.files:
         return None, "Khong co file nao duoc gui len."
@@ -78,8 +94,7 @@ def check():
     if err:
         return jsonify({"error": err}), 400
 
-    profile_name = request.form.get("profile", config.DEFAULT_PROFILE)
-    profile = config.get_profile(profile_name)
+    profile = _resolve_profile(request)
     do_format = request.form.get("format", "1") == "1"
     do_text = request.form.get("text", "1") == "1"
     do_spelling = request.form.get("spelling", "1") == "1"
@@ -151,8 +166,7 @@ def annotate_route():
     if err:
         return jsonify({"error": err}), 400
 
-    profile_name = request.form.get("profile", config.DEFAULT_PROFILE)
-    profile = config.get_profile(profile_name)
+    profile = _resolve_profile(request)
     do_format = request.form.get("format", "1") == "1"
     do_text = request.form.get("text", "1") == "1"
     do_spelling = request.form.get("spelling", "1") == "1"

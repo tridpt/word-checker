@@ -1,5 +1,7 @@
 # Word Checker — Kiểm tra chính tả & định dạng file Word trước khi nộp
 
+[![tests](https://github.com/tridpt/word-checker/actions/workflows/tests.yml/badge.svg)](https://github.com/tridpt/word-checker/actions/workflows/tests.yml)
+
 Tool dòng lệnh (chạy offline) giúp rà soát file `.docx` trước khi nộp: kiểm tra
 định dạng (font, cỡ chữ, giãn dòng, canh lề, lề trang), lỗi cơ học văn bản (cách
 đôi, dấu cách thừa/thiếu...) và lỗi chính tả tiếng Việt thường gặp.
@@ -28,6 +30,9 @@ python cli.py bai_tap.docx --no-text
 
 # Chọn profile quy chuẩn khác (hanh_chinh | luan_van | cong_ty)
 python cli.py bai_tap.docx --profile luan_van
+
+# Học quy chuẩn từ một file .docx mẫu rồi kiểm theo đúng mẫu đó
+python cli.py bai_tap.docx --template mau_chuan.docx
 
 # Tự động sửa lỗi cơ học + chính tả, lưu ra file mới (KHÔNG ghi đè file gốc)
 python cli.py bai_tap.docx --fix
@@ -115,6 +120,20 @@ Có sẵn nhiều profile trong `config.PROFILES`, chọn bằng `--profile`:
 - `hanh_chinh` (mặc định): Times New Roman 13–14, giãn 1.5, canh đều.
 - `luan_van`: Times New Roman 13, lề trái rộng 3.5cm để đóng quyển.
 - `cong_ty`: cho phép Arial/Calibri 11–12, giãn 1.15.
+
+## Học quy chuẩn từ file mẫu (--template)
+
+Không muốn chỉnh `config.py` bằng tay? Đưa cho tool một file `.docx` đã đúng
+chuẩn (ví dụ file mẫu của trường/công ty), nó tự rút ra quy chuẩn (font, cỡ chữ,
+giãn dòng, canh lề, lề trang, thụt lề dòng đầu) rồi kiểm các file khác theo đúng
+mẫu đó:
+
+```bash
+python cli.py bai_nop.docx --template mau_chuan.docx
+```
+
+Trên web app cũng có ô "hoặc file mẫu" — chọn file mẫu là tool kiểm theo mẫu đó
+(ưu tiên hơn lựa chọn quy chuẩn).
 
 Để bổ sung lỗi chính tả, thêm dòng vào `dictionaries/common_typos.txt` theo
 định dạng `từ_sai = từ_đúng`.
@@ -205,6 +224,7 @@ word-checker/
    ├─ autofix.py               # tự động sửa lỗi, lưu file mới
    ├─ annotate.py              # xuất .docx có comment tại chỗ lỗi
    ├─ runner.py                # gom logic chạy kiểm tra (dùng chung CLI + web)
+   ├─ learn_profile.py         # học quy chuẩn định dạng từ file .docx mẫu
    ├─ resources.py             # phân giải đường dẫn tài nguyên (dev + .exe)
    ├─ issues.py                # cấu trúc một "lỗi"
    └─ report.py                # in kết quả + xuất HTML
