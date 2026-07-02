@@ -293,4 +293,50 @@ def check_text(doc: DocInfo, checks: dict, max_consecutive_empty: int, skip_math
     if checks.get("empty_paragraphs"):
         issues += _check_empty_paragraphs(doc, max_consecutive_empty)
 
+    # Kiem tra loi co hoc trong bang, dau/chan trang, text box (khong tinh dinh dang)
+    issues += _check_extra_segments(doc, checks, skip_math)
+
+    return issues
+
+
+class _SegmentProxy:
+    """Bao mot ExtraSegment de tai su dung cac ham kiem tra von nhan ParagraphInfo.
+
+    paragraph = None (loi cap tai lieu) va gan nhan vi tri vao message thong qua
+    hau to. Chi dung cho cac ham kiem tra chi doc thuoc tinh .text va .number.
+    """
+    def __init__(self, text: str):
+        self.text = text
+        self.number = None
+
+
+def _check_extra_segments(doc: DocInfo, checks: dict, skip_math: bool) -> list[Issue]:
+    issues: list[Issue] = []
+    segments = getattr(doc, "extra_segments", None)
+    if not segments:
+        return issues
+
+    per_segment_checks = (
+        ("double_space", _check_double_space),
+        ("space_before_punct", _check_space_before_punct),
+        ("missing_space_after_punct", _check_missing_space_after_punct),
+        ("space_in_parens", _check_space_in_parens),
+        ("repeated_words", _check_repeated_words),
+        ("double_hyphen", _check_double_hyphen),
+        ("placeholder", _check_placeholder),
+    )
+
+    for seg in segments:
+        if not seg.text.strip():
+            continue
+        if skip_math and is_math_heavy(seg.text):
+            continue
+        proxy = _SegmentProxy(seg.text)
+        for key, fn in per_segment_checks:
+            if not checks.get(key):
+                continue
+            for it in fn(proxy):
+                # Danh dau vi tri (Bang/Dau trang/...) vao message vi khong co so doan
+                it.message = f"[{seg.location}] {it.message}"
+                issues.append(it)
     return issues

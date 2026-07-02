@@ -37,12 +37,25 @@ class ParagraphInfo:
 
 
 @dataclass
+class ExtraSegment:
+    """Mot doan van ban nam ngoai than bai chinh (bang, dau/chan trang, text box).
+
+    Chi kiem tra loi co hoc va chinh ta tren cac doan nay; KHONG kiem tra dinh
+    dang (font/co chu) vi bang bieu va dau/chan trang thuong dung dinh dang rieng
+    mot cach hop le -> tranh bao nham.
+    """
+    text: str
+    location: str  # nhan vi tri, vd "Bang", "Dau trang", "Chan trang", "Text box"
+
+
+@dataclass
 class DocInfo:
     path: str
     paragraphs: list[ParagraphInfo]
     margins_cm: dict           # {"top","bottom","left","right"} hoac {} neu khong doc duoc
     default_font: str | None
     default_size: float | None
+    extra_segments: list[ExtraSegment] = field(default_factory=list)
 
 
 _ALIGN_MAP = {
@@ -139,6 +152,69 @@ def _para_indent_spacing(paragraph):
     )
 
 
+def _iter_table_texts(table):
+    """Duyet de quy moi o trong bang (ke ca bang long nhau), tra ve text tung doan."""
+    for row in table.rows:
+        for cell in row.cells:
+            for p in cell.paragraphs:
+                if p.text.strip():
+                    yield p.text
+            for nested in cell.tables:
+                yield from _iter_table_texts(nested)
+
+
+def _collect_extra_segments(document) -> list["ExtraSegment"]:
+    """Thu thap text ngoai than bai: bang, dau/chan trang, text box."""
+    segments: list[ExtraSegment] = []
+
+    # 1) Bang trong than tai lieu
+    try:
+        for table in document.tables:
+            for text in _iter_table_texts(table):
+                segments.append(ExtraSegment(text=text, location="Bang"))
+    except Exception:
+        pass
+
+    # 2) Dau trang / chan trang cua tat ca cac section
+    try:
+        for section in document.sections:
+            for header, label in (
+                (section.header, "Dau trang"),
+                (section.first_page_header, "Dau trang (trang dau)"),
+                (section.even_page_header, "Dau trang (trang chan)"),
+                (section.footer, "Chan trang"),
+                (section.first_page_footer, "Chan trang (trang dau)"),
+                (section.even_page_footer, "Chan trang (trang chan)"),
+            ):
+                if header is None or getattr(header, "is_linked_to_previous", False):
+                    continue
+                for p in header.paragraphs:
+                    if p.text.strip():
+                        segments.append(ExtraSegment(text=p.text, location=label))
+                for table in header.tables:
+                    for text in _iter_table_texts(table):
+                        segments.append(ExtraSegment(text=text, location=label))
+    except Exception:
+        pass
+
+    # 3) Text box / shape: quet text trong cac phan tu w:txbxContent tren toan XML
+    try:
+        seen_txbx = set()
+        for txbx in document.element.iter(qn("w:txbxContent")):
+            texts = []
+            for t in txbx.iter(qn("w:t")):
+                if t.text:
+                    texts.append(t.text)
+            joined = "".join(texts).strip()
+            if joined and joined not in seen_txbx:
+                seen_txbx.add(joined)
+                segments.append(ExtraSegment(text=joined, location="Text box"))
+    except Exception:
+        pass
+
+    return segments
+
+
 def load_document(path: str) -> DocInfo:
     document = Document(path)
     defaults = _doc_default_font(document)
@@ -196,4 +272,5 @@ def load_document(path: str) -> DocInfo:
         margins_cm=margins_cm,
         default_font=defaults[0],
         default_size=defaults[1],
+        extra_segments=_collect_extra_segments(document),
     )

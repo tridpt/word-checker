@@ -118,6 +118,13 @@ python cli.py sample.docx --html bao_cao.html
 > `config.py`. Báo cáo cũng **gộp các lỗi định dạng lặp lại** thành một dòng tổng
 > hợp để dễ đọc.
 
+> **Soát cả ngoài thân bài**: ngoài các đoạn văn thường, tool còn dò lỗi cơ học
+> và chính tả trong **bảng biểu, đầu/chân trang (header/footer) và text box** —
+> những chỗ bài nộp thật hay có nội dung nhưng dễ bị bỏ sót. Các vùng này chỉ
+> kiểm lỗi văn bản/chính tả, KHÔNG kiểm định dạng (font/cỡ chữ) vì bảng và
+> đầu/chân trang thường dùng định dạng riêng một cách hợp lệ. Thống kê số từ vẫn
+> chỉ tính thân bài để không bị lệch.
+
 **Chính tả** (`checker/spelling.py`)
 - Dò theo từ điển lỗi thường gặp `dictionaries/common_typos.txt`
 - An toàn, ít báo nhầm vì chỉ báo các cặp lỗi đã biết chắc

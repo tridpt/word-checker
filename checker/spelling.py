@@ -74,4 +74,22 @@ def check_spelling(doc: DocInfo, typos: dict[str, str] | None = None) -> list[Is
                     suggestion=f"Co the la '{correct}'",
                 )
             )
+
+    # Kiem chinh ta trong bang, dau/chan trang, text box (loi cap tai lieu)
+    for seg in getattr(doc, "extra_segments", None) or []:
+        if not seg.text.strip():
+            continue
+        for m in pattern.finditer(seg.text):
+            found = m.group(1)
+            correct = typos.get(found.lower(), "")
+            issues.append(
+                Issue(
+                    category=CATEGORY_SPELLING,
+                    severity=SEVERITY_ERROR,
+                    message=f"[{seg.location}] Co the sai chinh ta: '{found}'",
+                    paragraph=None,
+                    excerpt=_excerpt_around(seg.text, m.start()),
+                    suggestion=f"Co the la '{correct}'",
+                )
+            )
     return issues
