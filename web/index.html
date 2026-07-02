@@ -70,9 +70,9 @@
   <div class="panel">
     <div id="drop">
       <p>📄 <strong>Kéo &amp; thả</strong> file .docx vào đây (có thể nhiều file), hoặc bấm để chọn.</p>
-      <p class="muted">Chỉ hỗ trợ định dạng .docx (Word). File không được gửi đi đâu cả.</p>
+      <p class="muted">Hỗ trợ .docx và .doc (Word). File .doc cần máy có cài Word hoặc LibreOffice. File không được gửi đi đâu cả.</p>
     </div>
-    <input type="file" id="fileInput" accept=".docx" multiple class="hidden">
+    <input type="file" id="fileInput" accept=".docx,.doc" multiple class="hidden">
     <div id="fileName"></div>
 
     <div class="opts">
@@ -137,8 +137,11 @@ themeBtn.addEventListener('click', () => {
 
 // ----- File selection -----
 function setFiles(fileList) {
-  const files = Array.from(fileList).filter(f => f.name.toLowerCase().endsWith('.docx'));
-  if (!files.length) { alert('Chỉ hỗ trợ file .docx'); return; }
+  const files = Array.from(fileList).filter(f => {
+    const n = f.name.toLowerCase();
+    return n.endsWith('.docx') || n.endsWith('.doc');
+  });
+  if (!files.length) { alert('Chỉ hỗ trợ file .docx hoặc .doc'); return; }
   selectedFiles = files;
   fileNameEl.textContent = files.length === 1
     ? 'Đã chọn: ' + files[0].name
@@ -201,7 +204,7 @@ async function downloadFrom(endpoint, btn, busyLabel, normalLabel, suffix) {
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = file.name.replace(/\.docx$/i, suffix);
+      a.download = file.name.replace(/\.docx?$/i, suffix);
       a.click();
       URL.revokeObjectURL(url);
     }

@@ -9,7 +9,9 @@
 
 Tool dòng lệnh (chạy offline) giúp rà soát file `.docx` trước khi nộp: kiểm tra
 định dạng (font, cỡ chữ, giãn dòng, canh lề, lề trang), lỗi cơ học văn bản (cách
-đôi, dấu cách thừa/thiếu...) và lỗi chính tả tiếng Việt thường gặp. Ngoài ra còn
+đôi, dấu cách thừa/thiếu...) và lỗi chính tả tiếng Việt thường gặp. Cũng nhận file
+`.doc` cũ (tự chuyển sang `.docx` nếu máy có cài Microsoft Word hoặc LibreOffice).
+Ngoài ra còn
 hiện thống kê nhanh (số từ, số đoạn, số trang ước tính, thời gian đọc).
 
 ## Cài đặt
@@ -135,7 +137,7 @@ pip install -r requirements.txt
 python webapp.py
 ```
 
-Mở trình duyệt tại http://127.0.0.1:5000, kéo **một hoặc nhiều** file `.docx` vào,
+Mở trình duyệt tại http://127.0.0.1:5000, kéo **một hoặc nhiều** file `.docx` (hoặc `.doc`) vào,
 chọn quy chuẩn rồi bấm **Kiểm tra** để xem báo cáo ngay trên trang, **Tự động sửa
 & tải về** để nhận file đã sửa, **Tải file có chú thích lỗi** để nhận bản `.docx`
 có comment, hoặc **Tải báo cáo PDF**. Có nút đổi **giao diện sáng/tối** ở góc trên.
@@ -268,6 +270,7 @@ word-checker/
    ├─ runner.py                # gom logic chạy kiểm tra (dùng chung CLI + web)
    ├─ learn_profile.py         # học quy chuẩn định dạng từ file .docx mẫu
    ├─ resources.py             # phân giải đường dẫn tài nguyên (dev + .exe)
+   ├─ convert.py               # chuyển .doc cũ sang .docx (Word/LibreOffice)
    ├─ issues.py                # cấu trúc một "lỗi"
    ├─ report.py                # in kết quả + xuất HTML
    └─ pdf_report.py            # xuất báo cáo PDF (font Unicode tiếng Việt)

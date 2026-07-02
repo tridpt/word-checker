@@ -16,6 +16,7 @@ from flask import Flask, jsonify, render_template, request, send_file
 import config
 from checker.annotate import annotate
 from checker.autofix import autofix
+from checker.convert import ConversionError
 from checker.document import load_document
 from checker.issues import SEVERITY_ERROR
 from checker.learn_profile import learn_profile
@@ -31,7 +32,17 @@ app = Flask(
 
 # Gioi han kich thuoc upload: 25 MB
 app.config["MAX_CONTENT_LENGTH"] = 25 * 1024 * 1024
-ALLOWED_EXT = ".docx"
+ALLOWED_EXT = (".docx", ".doc")
+
+
+@app.errorhandler(413)
+def _too_large(e):
+    return jsonify({"error": "File qua lon (toi da 25 MB)."}), 413
+
+
+@app.errorhandler(ConversionError)
+def _handle_conversion_error(e):
+    return jsonify({"error": str(e)}), 400
 
 
 def _issue_to_dict(it) -> dict:
@@ -47,10 +58,24 @@ def _issue_to_dict(it) -> dict:
 
 
 def _save_upload(file_storage) -> str:
-    """Luu file upload ra file tam, tra ve duong dan."""
-    fd, tmp_path = tempfile.mkstemp(suffix=".docx")
+    """Luu file upload ra file tam, tra ve duong dan.
+
+    Neu file goc la .doc (Word cu), tu dong chuyen sang .docx (can Word hoac
+    LibreOffice tren may). File tam se duoc xoa boi nguoi goi.
+    """
+    ext = os.path.splitext(file_storage.filename or "")[1].lower()
+    suffix = ext if ext in (".doc", ".docx") else ".docx"
+    fd, tmp_path = tempfile.mkstemp(suffix=suffix)
     os.close(fd)
     file_storage.save(tmp_path)
+    if suffix == ".doc":
+        from checker.convert import convert_doc_to_docx
+        docx_path = convert_doc_to_docx(tmp_path)
+        try:
+            os.remove(tmp_path)
+        except OSError:
+            pass
+        return docx_path
     return tmp_path
 
 
@@ -76,7 +101,7 @@ def _valid_upload(req):
     if not f.filename:
         return None, "Chua chon file."
     if not f.filename.lower().endswith(ALLOWED_EXT):
-        return None, "Chi ho tro file .docx (Word)."
+        return None, "Chi ho tro file .docx hoac .doc (Word)."
     return f, None
 
 

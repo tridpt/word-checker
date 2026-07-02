@@ -77,3 +77,73 @@ chín mùi = chín muồi
 khắc khe = khắt khe
 lãng mạng = lãng mạn
 sát nhập = sáp nhập
+
+# ============================================================
+# MO RONG: bo loi chinh ta pho bien (do tin cao cao)
+# Moi dong: TU_SAI = TU_DUNG  (hai ve PHAI khac nhau).
+# Chi them cap chac chan de tranh bao nham voi tu dung.
+# ============================================================
+
+# --- Loi hoi / nga (thanh dieu) ---
+bổng nhiên = bỗng nhiên
+bổng dưng = bỗng dưng
+kiễm tra = kiểm tra
+nghỉ ngợi = nghĩ ngợi
+sẳn sàng = sẵn sàng
+sửa chửa = sửa chữa
+đỗ lỗi = đổ lỗi
+hửng hờ = hững hờ
+dùng cảm = dũng cảm
+chẳng chịt = chằng chịt
+lãnh đãng = lãng đãng
+
+# --- Loi s / x ---
+soi sét = soi xét
+sáng xủa = sáng sủa
+sắc xảo = sắc sảo
+sinh xôi = sinh sôi
+sổ xách = sổ sách
+xâu xa = sâu xa
+xét sử = xét xử
+xử xự = xử sự
+xa sôi = xa xôi
+xúm sít = xúm xít
+
+# --- Loi ch / tr ---
+chân trọng = trân trọng
+chăng trở = trăn trở
+chở thành = trở thành
+chở ngại = trở ngại
+chú chọng = chú trọng
+chưng bày = trưng bày
+trơ chọi = trơ trọi
+
+# --- Loi d / gi / r ---
+dành giật = giành giật
+dàn dụa = giàn giụa
+dấu diếm = giấu giếm
+dòng giã = ròng rã
+rẫy rụa = giãy giụa
+
+# --- Loi go dau / bo dau ---
+đựoc = được
+kiến thưc = kiến thức
+nghành = ngành
+qui định = quy định
+qui trình = quy trình
+qui tắc = quy tắc
+qui mô = quy mô
+kỹ thuât = kỹ thuật
+
+# --- Tu bi viet sai pho bien ---
+chẩn chừ = chần chừ
+chín chắng = chín chắn
+hàm xúc = hàm súc
+khoái chá = khoái trá
+nhất quáng = nhất quán
+rốt cuột = rốt cuộc
+sáng kiếng = sáng kiến
+tham những = tham nhũng
+xán lạng = xán lạn
+nghiêm ngặc = nghiêm ngặt
+xảo quyệc = xảo quyệt
