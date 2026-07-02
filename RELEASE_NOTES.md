@@ -1,9 +1,19 @@
-# Word Checker v1.0.0
+# Word Checker v1.1.0
 
-Công cụ kiểm tra chính tả & định dạng file Word (.docx) trước khi nộp — chạy
-offline, có cả dòng lệnh và giao diện web kéo-thả.
+Công cụ kiểm tra chính tả & định dạng file Word trước khi nộp — chạy offline,
+có cả dòng lệnh và giao diện web kéo-thả.
 
-## Tính năng
+## Mới trong v1.1.0
+- **Nhận file `.doc` cũ**: tự chuyển sang `.docx` để kiểm tra (cần máy có cài
+  Microsoft Word hoặc LibreOffice). Dùng được cho cả CLI lẫn web app.
+- **Soát cả bảng, đầu/chân trang và text box**: trước đây chỉ kiểm thân bài,
+  nay bắt thêm lỗi cơ học & chính tả trong bảng biểu, header/footer, text box
+  (gắn nhãn vị trí rõ ràng). Vẫn không kiểm định dạng ở những vùng này để tránh
+  báo nhầm.
+- **Từ điển chính tả mở rộng**: từ 65 lên 112 cặp lỗi thường gặp (hỏi/ngã, s/x,
+  ch/tr, d/gi/r, lỗi gõ/bỏ dấu...), đã lọc kỹ để không báo nhầm từ đúng.
+
+## Tính năng chính
 - Kiểm tra **định dạng**: font, cỡ chữ, giãn dòng, canh lề, lề trang, thụt lề;
   cảnh báo khi dùng lẫn lộn nhiều font/cỡ chữ.
 - Kiểm tra **lỗi văn bản**: cách đôi, dấu cách thừa/thiếu quanh dấu câu, đoạn
@@ -21,7 +31,8 @@ offline, có cả dòng lệnh và giao diện web kéo-thả.
 ## Cách dùng nhanh (file .exe)
 1. Tải `WordChecker.exe` ở mục Assets bên dưới.
 2. Double-click để chạy — trình duyệt tự mở giao diện kéo-thả.
-3. Kéo file `.docx` vào, chọn quy chuẩn, bấm Kiểm tra. Không cần cài Python.
+3. Kéo file `.docx` (hoặc `.doc`) vào, chọn quy chuẩn, bấm Kiểm tra. Không cần
+   cài Python.
 
 > Lưu ý: chạy cục bộ trên máy bạn (localhost), file không gửi đi đâu.
 

@@ -241,6 +241,11 @@ Kết quả nằm ở `dist\WordChecker.exe`. Double-click để chạy: chươn
 là tắt. File này gói sẵn giao diện `web/` và từ điển `dictionaries/` nên chạy độc
 lập, chỉ cần copy mỗi file `.exe` sang máy khác (Windows) là dùng được.
 
+> File `.spec` đã loại sẵn các thư viện nặng không dùng tới (matplotlib, numpy,
+> tkinter...) để `.exe` gọn hơn. Nếu build bằng `pyinstaller WordChecker.spec`
+> sẽ áp dụng các loại trừ này. Lưu ý: tính năng nhận file `.doc` cũ trong bản
+> `.exe` chỉ hoạt động nếu máy đích có cài Microsoft Word hoặc LibreOffice.
+
 ## Cấu trúc dự án
 
 ```
